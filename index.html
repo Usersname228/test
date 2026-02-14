@@ -1,0 +1,1736 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+    <title>Народы России - Интерактивная карта</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 1rem 0;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 2rem;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: #f0f0f0;
+        }
+
+        .hero {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 150px 0 100px;
+            text-align: center;
+        }
+
+        .hero-content {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            color: white;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+        }
+
+        .cta-button {
+            display: inline-block;
+            background: #ff6b6b;
+            color: white;
+            padding: 12px 30px;
+            width: 350px;
+            height: 100px;
+            text-decoration: none;
+            border-radius: 25px;
+            font-weight: bold;
+            transition: transform 0.3s, background 0.3s;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-3px);
+            background: #523535;
+        }
+
+        .features {
+            padding: 80px 0;
+            background: #f8f9fa;
+        }
+
+        .container-features{
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .section-title h2 {
+            font-size: 2.5rem;
+            color: #333;
+            margin-bottom: 1rem;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .feature-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: transform 0.3s;
+        }
+
+        .feature-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+        .slider-container {
+            position: absolute; 
+            left: 50%;
+            transform: translate(-50%);
+            max-width: 1200px;
+            width: 100%;
+            position: relative;
+            overflow: hidden;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+        }
+
+        .slider {
+            display: flex;
+            transition: transform 0.8s ease-in-out;
+            height: 500px;
+        }
+
+        .slide {
+            min-width: 100%;
+            display: flex;
+            background: white;
+        }
+
+        .slide-image {
+            flex: 1;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .slide-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+
+        .slide:hover .slide-image img {
+            transform: scale(1.05);
+        }
+
+        .slide-content {
+            flex: 1;
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            background: white;
+        }
+
+        .slide-subtitle {
+            color: #667eea;
+            font-size: 14px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 10px;
+        }
+
+        .slide-title {
+            font-size: 2.5em;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 20px;
+            line-height: 1.2;
+        }
+
+        .slide-text {
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 30px;
+            font-size: 1.1em;
+        }
+
+        .slide-button {
+            display: inline-block;
+            padding: 12px 30px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            text-decoration: none;
+            border-radius: 25px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+            width: fit-content;
+        }
+
+        .slide-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .slider-controls {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 10px;
+            z-index: 10;
+        }
+
+        .slider-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.5);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .slider-dot.active {
+            background: white;
+            transform: scale(1.2);
+        }
+
+        .slider-arrow {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 50px;
+            height: 50px;
+            background: rgba(255,255,255,0.9);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            font-size: 20px;
+            color: #333;
+            transition: all 0.3s ease;
+            z-index: 10;
+            border: none;
+        }
+
+        .slider-arrow:hover {
+            background: white;
+            transform: translateY(-50%) scale(1.1);
+        }
+
+        .slider-arrow.prev {
+            left: 20px;
+        }
+
+        .slider-arrow.next {
+            right: 20px;
+        }
+
+        .auto-play-indicator {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(255,255,255,0.9);
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 12px;
+            color: #333;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            z-index: 10;
+        }
+
+        .auto-play-indicator .dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #4CAF50;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.3; }
+            100% { opacity: 1; }
+        }
+
+        .stooped-info{
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            height: 100px;
+            text-align: center;
+        }
+
+        .stooped-info-h2{
+            padding-top: 15px;
+            color: rgb(138, 222, 255);
+            
+        }
+        
+        .stooped-info-h3{
+            color: white;
+        }
+
+        .about {
+            padding: 80px 0;
+        }
+
+        .about-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+        }
+
+        .about-text h2 {
+            font-size: 2.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .about-image {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            height: 400px;
+            border-radius: 10px;
+        }
+        
+        .video-css{
+            display: block; 
+            margin-left: auto; 
+            margin-right: auto;
+            max-width: 100%;
+            height: auto;
+        }
+        
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f5f5f5;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        h1 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+        
+        footer {
+            text-align: center;
+            margin-top: 40px;
+            padding: 20px 0;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-top: 1px solid #ddd;
+        }
+        
+        .map-old{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .map-section {
+            padding: 30px;
+            position: relative;
+        }
+        
+        .map-container {
+            position: relative;
+            width: 100%;
+            height: 1000px;
+            background: transparent;
+            border: 2px dashed #1a237e;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        
+        #russiaMap {
+            background-image: url("12.jpg");
+            background-size: cover;
+        }
+        
+        .region-point {
+            fill: #ff4444;
+            stroke: #fff;
+            stroke-width: 2;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
+        }
+        
+        .region-point:hover {
+            fill: #ff0000;
+            stroke-width: 3;
+            r: 12;
+            filter: drop-shadow(0 4px 8px rgba(0,0,0,0.4));
+        }
+        
+        .region-point.highlighted {
+            fill: #ff0000;
+            stroke: #ffff00;
+            stroke-width: 3;
+            r: 14;
+            animation: pulse 1.5s infinite;
+        }
+        
+        .region-label {
+            font-size: 11px;
+            font-weight: bold;
+            fill: #1a237e;
+            text-anchor: middle;
+            pointer-events: none;
+            text-shadow: 1px 1px 2px white;
+        }
+        
+        .info-panel {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            min-width: 300px;
+            max-width: 350px;
+            display: none;
+            border-left: 5px solid #ff4444;
+            z-index: 1000;
+        }
+        
+        .info-panel h3 {
+            color: #1a237e;
+            margin-bottom: 15px;
+            font-size: 1.4em;
+            border-bottom: 2px solid #e0e0e0;
+            padding-bottom: 8px;
+        }
+        
+        .info-item {
+            margin: 10px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .info-label {
+            font-weight: bold;
+            color: #555;
+        }
+        
+        .info-value {
+            color: #1a237e;
+            font-weight: 600;
+        }
+        
+        .district-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            background: #ff4444;
+            color: white;
+            border-radius: 20px;
+            font-size: 0.8em;
+            margin-top: 5px;
+        }
+        
+        .region-description {
+            margin-top: 10px;
+            padding: 10px;
+            background: #f8f9fa;
+            border-radius: 5px;
+            font-size: 0.9em;
+            color: #666;
+            border-left: 3px solid #ff4444;
+        }
+        
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+            margin-bottom: 50px;
+        }
+        
+        .filter-btn {
+            padding: 10px 20px;
+            background: #1a237e;
+            color: white;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1em;
+        }
+        
+        .filter-btn:hover {
+            background: #303f9f;
+            transform: translateY(-2px);
+        }
+        
+        .filter-btn.active {
+            background: #ff4444;
+            transform: translateY(-2px);
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 50px;
+            font-size: 1.2em;
+            color: #666;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+        }
+        
+        .stat-item {
+            text-align: center;
+            padding: 15px;
+        }
+        
+        .stat-number {
+            font-size: 2em;
+            font-weight: bold;
+            color: #ff4444;
+        }
+        
+        .stat-label {
+            color: #666;
+            margin-top: 5px;
+        }
+
+        /* Единый стиль для карточек регионов */
+        .region-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+        }
+        
+        .region-card {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid #ff4444;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .region-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255,68,68,0.2);
+        }
+        
+        .region-marker {
+            width: 12px;
+            height: 12px;
+            background: #ff4444;
+            border-radius: 50%;
+            border: 2px solid white;
+            box-shadow: 0 0 0 2px #ff4444;
+        }
+        
+        .region-info {
+            flex: 1;
+        }
+        
+        .region-name {
+            font-weight: bold;
+            color: #1a237e;
+        }
+        
+        .region-details {
+            font-size: 0.9em;
+            color: #666;
+            margin-top: 2px;
+        }
+
+        /* Адаптивные стили */
+        @media (max-width: 1200px) {
+            .nav-container {
+                padding: 0 1rem;
+            }
+            
+            .hero h1 {
+                font-size: 3rem;
+            }
+        }
+
+        @media (max-width: 992px) {
+            .nav-links {
+                gap: 1rem;
+            }
+            
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            .about-content {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+            
+            .about-image {
+                height: 300px;
+            }
+            
+            .slide-title {
+                font-size: 2em;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .nav-container {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            .nav-links {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            
+            .hero {
+                padding: 200px 0 80px;
+            }
+            
+            .hero h1 {
+                font-size: 2rem;
+            }
+            
+            .hero p {
+                font-size: 1rem;
+            }
+            
+            .cta-button {
+                width: 280px;
+                height: 80px;
+            }
+            
+            .slide {
+                flex-direction: column;
+                height: auto;
+            }
+
+            .slider {
+                height: auto;
+            }
+
+            .slide-image {
+                height: 300px;
+            }
+
+            .slide-content {
+                padding: 30px 20px;
+            }
+
+            .slide-title {
+                font-size: 2em;
+            }
+
+            .auto-play-indicator {
+                top: 10px;
+                right: 10px;
+                font-size: 10px;
+            }
+            
+            .map-container {
+                height: 600px;
+            }
+            
+            .info-panel {
+                position: fixed;
+                bottom: 10px;
+                right: 10px;
+                left: 10px;
+                max-width: calc(100% - 20px);
+                min-width: auto;
+                z-index: 2000;
+            }
+            
+            .controls {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .filter-btn {
+                width: 200px;
+            }
+            
+            .stooped-info {
+                height: auto;
+                padding: 15px;
+            }
+            
+            .stooped-info-h2 {
+                font-size: 1.2rem;
+                padding-top: 0;
+            }
+            
+            .stooped-info-h3 {
+                font-size: 1rem;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .hero h1 {
+                font-size: 1.8rem;
+            }
+            
+            .cta-button {
+                width: 240px;
+                height: 70px;
+                font-size: 0.9rem;
+            }
+            
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .stats {
+                grid-template-columns: 1fr;
+            }
+            
+            .region-cards {
+                grid-template-columns: 1fr;
+            }
+            
+            .map-container {
+                height: 400px;
+            }
+            
+            .info-panel {
+                padding: 15px;
+            }
+            
+            .info-panel h3 {
+                font-size: 1.2rem;
+            }
+        }
+
+        /* Стили для скрытия карты на маленьких экранах */
+        @media (max-width: 900px) {
+            .map-section .map-container,
+            .map-section .controls,
+            .map-section .stats {
+                display: none;
+            }
+            
+            /* Показываем только одну плашку с регионами */
+            .region-cards {
+                display: grid;
+            }
+            
+            /* Скрываем дублирующую плашку, если она есть */
+            #regionList {
+                display: none;
+            }
+        }
+
+        /* Для больших экранов показываем карту и скрываем мобильную плашку */
+        @media (min-width: 901px) {
+            .map-fallback .region-cards {
+                display: none;
+            }
+            
+            #regionList {
+                display: grid;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <nav class="nav-container">
+            <div class="logo">Эхо Предков</div>
+            <ul class="nav-links">
+                <li><a href="#home">Главная</a></li>
+                <li><a href="#features">Наши преимущества</a></li>
+                <li><a href="#interactive-map">Интерактивная карта</a></li>
+                <li><a href="#about">О нас</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <section class="hero" id="home">
+        <div class="hero-content">
+            <h1>Добро пожаловать на сайт!</h1>
+            <p>Это не просто народы России!</p>
+            <a href="#interactive-map" class="cta-button"><h2>Интерактивная карта России.</h2></a>
+        </div>
+    </section>
+
+    <div class="slider-container">
+        <div class="auto-play-indicator">
+            <div class="dot"></div>
+            Автопрокрутка
+        </div>
+
+        <div class="slider">
+            <div class="slide">
+                <div class="slide-image">
+                    <img src="public/2z.png" alt="Якуты">
+                </div>
+                <div class="slide-content">
+                    <div class="slide-subtitle">Народ</div>
+                    <h2 class="slide-title">Якуты</h2>
+                    <p class="slide-text">Исследуйте самые интересные народы России. От сибирков до южных народов. Все они по своему интересные и незабываемы, многие из них вымирают, но здесь они будут жить всегда</p>
+                    <a href="#russia-map" class="slide-button-a"><button class="slide-button">Узнать больше</button></a>
+                </div>
+            </div>
+
+            <div class="slide">
+                <div class="slide-image">
+                    <img src="public/3z.png" alt="Долганы">
+                </div>
+                <div class="slide-content">
+                    <div class="slide-subtitle">Народ</div>
+                    <h2 class="slide-title">Долганы</h2>
+                    <p class="slide-text">Исследуйте самые интересные народы России. От сибирков до южных народов. Все они по своему интересные и незабываемы, многие из них вымирают, но здесь они будут жить всегда</p>
+                    <a href="#russia-map" class="slide-button-a"><button class="slide-button">Узнать больше</button></a>
+                </div>
+            </div>
+
+            <div class="slide">
+                <div class="slide-image">
+                    <img src="public/4z.jpg" alt="Хакасы">
+                </div>
+                <div class="slide-content">
+                    <div class="slide-subtitle">Народ</div>
+                    <h2 class="slide-title">Хакасы</h2>
+                    <p class="slide-text">Исследуйте самые интересные народы России. От сибирков до южных народов. Все они по своему интересные и незабываемы, многие из них вымирают, но здесь они будут жить всегда</p>
+                    <a href="#russia-map" class="slide-button-a"><button class="slide-button">Узнать больше</button></a>
+                </div>
+            </div>
+
+            <div class="slide">
+                <div class="slide-image">
+                    <img src="public/5z.jpg" alt="Чулымцы">
+                </div>
+                <div class="slide-content">
+                    <div class="slide-subtitle">Народ</div>
+                    <h2 class="slide-title">Чулымцы</h2>
+                    <p class="slide-text">Исследуйте самые интересные народы России. От сибирков до южных народов. Все они по своему интересные и незабываемы, многие из них вымирают, но здесь они будут жить всегда</p>
+                    <a href="#russia-map" class="slide-button-a"><button class="slide-button">Узнать больше</button></a>
+                </div>
+            </div>
+
+            <div class="slide">
+                <div class="slide-image">
+                    <img src="public/6z.jpg" alt="Нганасаны">
+                </div>
+                <div class="slide-content">
+                    <div class="slide-subtitle">Народ</div>
+                    <h2 class="slide-title">Нганасаны</h2>
+                    <p class="slide-text">Исследуйте самые интересные народы России. От сибирков до южных народов. Все они по своему интересные и незабываемы, многие из них вымирают, но здесь они будут жить всегда</p>
+                    <a href="#russia-map" class="slide-button-a"><button class="slide-button">Узнать больше</button></a>
+                </div>
+            </div>
+
+            <div class="slide">
+                <div class="slide-image">
+                    <img src="public/7z.jpg" alt="Энцы">
+                </div>
+                <div class="slide-content">
+                    <div class="slide-subtitle">Народ</div>
+                    <h2 class="slide-title">Энцы</h2>
+                    <p class="slide-text">Исследуйте самые интересные народы России. От сибирков до южных народов. Все они по своему интересные и незабываемы, многие из них вымирают, но здесь они будут жить всегда</p>
+                    <a href="#russia-map" class="slide-button-a"><button class="slide-button">Узнать больше</button></a>
+                </div>
+            </div>
+
+            <div class="slide">
+                <div class="slide-image">
+                    <img src="public/8z.jpg" alt="Ненцы">
+                </div>
+                <div class="slide-content">
+                    <div class="slide-subtitle">Народ</div>
+                    <h2 class="slide-title">Ненцы</h2>
+                    <p class="slide-text">Исследуйте самые интересные народы России. От сибирков до южных народов. Все они по своему интересные и незабываемы, многие из них вымирают, но здесь они будут жить всегда</p>
+                    <a href="#russia-map" class="slide-button-a"><button class="slide-button">Узнать больше</button></a>
+                </div>
+            </div>
+
+            <div class="slide">
+                <div class="slide-image">
+                    <img src="public/9z.jpg" alt="Селькупы">
+                </div>
+                <div class="slide-content">
+                    <div class="slide-subtitle">Народ</div>
+                    <h2 class="slide-title">Селькупы</h2>
+                    <p class="slide-text">Исследуйте самые интересные народы России. От сибирков до южных народов. Все они по своему интересные и незабываемы, многие из них вымирают, но здесь они будут жить всегда</p>
+                    <a href="#russia-map" class="slide-button-a"><button class="slide-button">Узнать больше</button></a>
+                </div>
+            </div>
+
+            <div class="slide">
+                <div class="slide-image">
+                    <img src="public/10z.jpg" alt="Эвенки">
+                </div>
+                <div class="slide-content">
+                    <div class="slide-subtitle">Народ</div>
+                    <h2 class="slide-title">Эвенки</h2>
+                    <p class="slide-text">Исследуйте самые интересные народы России. От сибирков до южных народов. Все они по своему интересные и незабываемы, многие из них вымирают, но здесь они будут жить всегда</p>
+                    <a href="#russia-map" class="slide-button-a"><button class="slide-button">Узнать больше</button></a>
+                </div>
+            </div>
+
+            <div class="slide">
+                <div class="slide-image">
+                    <img src="public/11z.jpg" alt="Нанайцы">
+                </div>
+                <div class="slide-content">
+                    <div class="slide-subtitle">Народ</div>
+                    <h2 class="slide-title">Нанайцы</h2>
+                    <p class="slide-text">Исследуйте самые интересные народы России. От сибирков до южных народов. Все они по своему интересные и незабываемы, многие из них вымирают, но здесь они будут жить всегда</p>
+                    <a href="#russia-map" class="slide-button-a"><button class="slide-button">Узнать больше</button></a>
+                </div>
+            </div>
+
+            <div class="slide">
+                <div class="slide-image">
+                    <img src="public/12z.jpg" alt="Эвены">
+                </div>
+                <div class="slide-content">
+                    <div class="slide-subtitle">Народ</div>
+                    <h2 class="slide-title">Эвены</h2>
+                    <p class="slide-text">Исследуйте самые интересные народы России. От сибирков до южных народов. Все они по своему интересные и незабываемы, многие из них вымирают, но здесь они будут жить всегда</p>
+                    <a href="#russia-map" class="slide-button-a"><button class="slide-button">Узнать больше</button></a>
+                </div>
+            </div>
+
+            <div class="slide">
+                <div class="slide-image">
+                    <img src="public/13z.jpg" alt="Украинцы">
+                </div>
+                <div class="slide-content">
+                    <div class="slide-subtitle">Народ</div>
+                    <h2 class="slide-title">Украинцы</h2>
+                    <p class="slide-text">Исследуйте самые интересные народы России. От сибирков до южных народов. Все они по своему интересные и незабываемы, многие из них вымирают, но здесь они будут жить всегда</p>
+                    <a href="#russia-map" class="slide-button-a"><button class="slide-button">Узнать больше</button></a>
+                </div>
+            </div>
+
+            <div class="slide">
+                <div class="slide-image">
+                    <img src="public/14z.jpg" alt="Русские">
+                </div>
+                <div class="slide-content">
+                    <div class="slide-subtitle">Народ</div>
+                    <h2 class="slide-title">Русские</h2>
+                    <p class="slide-text">Исследуйте самые интересные народы России. От сибирков до южных народов. Все они по своему интересные и незабываемы, многие из них вымирают, но здесь они будут жить всегда</p>
+                    <a href="#russia-map" class="slide-button-a"><button class="slide-button">Узнать больше</button></a>
+                </div>
+            </div>
+        </div>
+
+        <button class="slider-arrow prev">❮</button>
+        <button class="slider-arrow next">❯</button>
+
+        <div class="slider-controls">
+            <div class="slider-dot active"></div>
+            <div class="slider-dot"></div>
+            <div class="slider-dot"></div>
+            <div class="slider-dot"></div>
+        </div>
+    </div>
+
+    <div class="stooped-info">
+        <h2 class="stooped-info-h2" id="interactive-map"><strong>Открой для себя богатый мир народных промыслов России с нашей</strong> интерактивной картой!</h2>
+        <h3 class="stooped-info-h3">Кликайте на интересующие вас регионы, чтобы увидеть информацию о местных традиционных ремеслах, истории и мастерах.</h3>
+    </div>
+
+    <div class="map-old">
+        <section class="map-section" id="russia-map">
+            <!-- Запасной контент для мобильных устройств (только одна плашка) -->
+            <div class="map-fallback">
+                <h3>Интерактивная карта недоступна на вашем устройстве</h3>
+                <p>Для просмотра интерактивной карты используйте устройство с большим экраном. На вашем устройстве доступен просмотр регионов в виде списка:</p>
+                <div class="region-cards" id="mobileRegionCards">
+                    <!-- Карточки будут добавлены через JavaScript -->
+                </div>
+            </div>
+
+            <div class="controls">
+                <button class="filter-btn active" onclick="filterByDistrict('all')">Все регионы</button>
+                <button class="filter-btn" onclick="filterByDistrict('Центральный')">Центральный ФО</button>
+                <button class="filter-btn" onclick="filterByDistrict('Северо-Западный')">Северо-Западный ФО</button>
+                <button class="filter-btn" onclick="filterByDistrict('Южный')">Южный ФО</button>
+                <button class="filter-btn" onclick="filterByDistrict('Северо-Кавказский')">Северо-Кавказский ФО</button>
+                <button class="filter-btn" onclick="filterByDistrict('Приволжский')">Приволжский ФО</button>
+                <button class="filter-btn" onclick="filterByDistrict('Уральский')">Уральский ФО</button>
+                <button class="filter-btn" onclick="filterByDistrict('Сибирский')">Сибирский ФО</button>
+                <button class="filter-btn" onclick="filterByDistrict('Дальневосточный')">Дальневосточный ФО</button>
+            </div>
+            
+            <div class="map-container">
+                <div class="loading" id="loading">
+                    Загрузка карты...
+                </div>
+                <svg id="russiaMap" style="display: none;"></svg>
+                
+                <div class="info-panel" id="infoPanel" style="display: none;">
+                    <h3 id="regionName">Выберите регион</h3>
+                    <div class="info-item">
+                        <span class="info-label">Столица:</span>
+                        <span class="info-value" id="regionCapital">-</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Население:</span>
+                        <span class="info-value" id="regionPopulation">-</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Площадь:</span>
+                        <span class="info-value" id="regionArea">-</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Федеральный округ:</span>
+                        <span class="info-value" id="regionDistrict">-</span>
+                    </div>
+                    <div class="district-badge" id="districtBadge"></div>
+                    <div class="region-description" id="regionDescription"></div>
+                </div>
+            </div>
+
+            <!-- Эта плашка будет скрыта на мобильных устройствах через CSS -->
+            <div class="region-cards" id="regionList">
+                <!-- Список регионов будет сгенерирован JavaScript -->
+            </div>
+            
+            <div class="stats">
+                <div class="stat-item">
+                    <div class="stat-number">14</div>
+                    <div class="stat-label">ключевых регионов</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">8</div>
+                    <div class="stat-label">федеральных округов</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">≈65 млн</div>
+                    <div class="stat-label">общее население</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">≈9.2 млн км²</div>
+                    <div class="stat-label">общая площадь</div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <script>
+    // Данные по выбранным регионам с координатами для точек
+    const regionsData = {
+        // Центральный федеральный округ
+        "Тверская область": { 
+            hreff:("public/Twer.html"),
+            capital: "Тверь", 
+            population: "1.3 млн", 
+            area: "84201", 
+            district: "Центральный",
+            description: "Расположена в центре Европейской части России, известна своими реками и озёрами",
+            coordinates: { x: 151, y: 306 }
+        },
+        "Московская область": { 
+            hreff:("Sitehtml/Mos.html"),
+            capital: "Москва", 
+            population: "7.7 млн", 
+            area: "44329", 
+            district: "Центральный",
+            description: "Крупнейший по населению субъект РФ, окружает столицу страны",
+            coordinates: { x: 155, y: 335 }
+        },
+
+        // Северо-Западный федеральный округ
+        "Ленинградская область": { 
+            hreff:("Sitehtml/CPB.html"),
+            capital: "Санкт-Петербург", 
+            population: "1.9 млн", 
+            area: "83908", 
+            district: "Северо-Западный",
+            description: "Расположена вокруг Санкт-Петербурга, богата историческими памятниками",
+            coordinates: { x: 168, y: 270 }
+        },
+        "Калининградская область": { 
+            hreff:("Sitehtml/Kal.html"),
+            capital: "Калининград", 
+            population: "1.0 млн", 
+            area: "15125", 
+            district: "Северо-Западный",
+            description: "Самая западная территория России, анклав на берегу Балтийского моря",
+            coordinates: { x: 70, y: 250 }
+        },
+
+        // Южный федеральный округ
+        "Краснодарский край": { 
+            hreff:("Sitehtml/Krasnd.html"),
+            capital: "Краснодар", 
+            population: "5.7 млн", 
+            area: "75485", 
+            district: "Южный",
+            description: "Курортный регион на черноморском побережье, житница России",
+            coordinates: { x: 75, y: 440 }
+        },
+        "Волгоградская область": { 
+            hreff:("Sitehtml/Volg.html"),
+            capital: "Волгоград", 
+            population: "2.5 млн", 
+            area: "112877", 
+            district: "Южный",
+            description: "Расположена на юго-востоке Европейской части России, важный промышленный центр",
+            coordinates: { x: 145, y: 425 }
+        },
+
+        // Северо-Кавказский федеральный округ
+        "Чеченская Республика": { 
+            hreff:("Sitehtml/Gro.html"),
+            capital: "Грозный", 
+            population: "1.5 млн", 
+            area: "15647", 
+            district: "Северо-Кавказский",
+            description: "Расположена на северном склоне Большого Кавказского хребта",
+            coordinates: { x: 97, y: 510 }
+        },
+
+        // Приволжский федеральный округ
+        "Оренбургская область": { 
+            hreff:("Sitehtml/Oren.html"),
+            capital: "Оренбург", 
+            population: "2.0 млн", 
+            area: "123702", 
+            district: "Приволжский",
+            description: "Расположена на стыке Европы и Азии, важный газодобывающий регион",
+            coordinates: { x: 230, y: 450 }
+        },
+
+        // Уральский федеральный округ
+        "Ямало-Ненецкий автономный округ": { 
+            hreff:("Sitehtml/Sal.html"),
+            capital: "Салехард", 
+            population: "0.5 млн", 
+            area: "769250", 
+            district: "Уральский",
+            description: "Крупнейший газодобывающий регион мира, расположен в Арктике",
+            coordinates: { x: 410, y: 335 }
+        },
+
+        // Сибирский федеральный округ
+        "Красноярский край": { 
+            hreff:("Sitehtml/Krasnoir.html"),
+            capital: "Красноярск", 
+            population: "2.9 млн", 
+            area: "2366797", 
+            district: "Сибирский",
+            description: "Второй по площади субъект РФ, богат природными ресурсами",
+            coordinates: { x: 525, y: 390 }
+        },
+
+        // Дальневосточный федеральный округ
+        "Саха (Якутия)": { 
+            hreff:("Sitehtml/Ikytsk.html"),
+            capital: "Якутск", 
+            population: "1.0 млн", 
+            area: "3083523", 
+            district: "Дальневосточный",
+            description: "Крупнейший субъект РФ, регион с экстремальными климатическими условиями",
+            coordinates: { x: 690, y: 300 }
+        },
+        "Хабаровский край": { 
+            hreff:("Sitehtml/Hab.html"),
+            capital: "Хабаровск", 
+            population: "1.3 млн", 
+            area: "787633", 
+            district: "Дальневосточный",
+            description: "Крупный промышленный и транспортный узел Дальнего Востока",
+            coordinates: { x: 800, y: 300 }
+        },
+        "Магаданская область": { 
+            hreff:("Sitehtml/Mag.html"),
+            capital: "Магадан", 
+            population: "0.1 млн", 
+            area: "462464", 
+            district: "Дальневосточный",
+            description: "Расположена на берегу Охотского моря, известна золотодобычей",
+            coordinates: { x: 834, y: 230 }
+        },
+        "Чукотский автономный округ": { 
+            hreff:("Sitehtml/Anadr.html"),
+            capital: "Анадырь", 
+            population: "50 тыс.", 
+            area: "721481", 
+            district: "Дальневосточный",
+            description: "Самый восточный регион России, расположен на Чукотском полуострове",
+            coordinates: { x: 840, y: 120 }
+        }
+    };
+
+    // Цвета для федеральных округов
+    const districtColors = {
+        'Центральный': '#4caf50',
+        'Северо-Западный': '#2196f3',
+        'Южный': '#ff9800',
+        'Северо-Кавказский': '#e91e63',
+        'Приволжский': '#9c27b0',
+        'Уральский': '#f44336',
+        'Сибирский': '#795548',
+        'Дальневосточный': '#607d8b'
+    };
+
+    let currentPoints = [];
+
+    document.addEventListener('DOMContentLoaded', function() {
+        // Создаем карточки для мобильной версии (только один раз)
+        createMobileRegionCards();
+        // Создаем карточки для десктопной версии
+        createDesktopRegionCards();
+        
+        // Проверяем размер экрана и скрываем карту если нужно
+        checkScreenSize();
+        
+        // Создаем карту только если экран достаточно большой
+        if (window.innerWidth > 900) {
+            createCleanMap();
+        }
+        
+        // Добавляем обработчик изменения размера окна
+        window.addEventListener('resize', function() {
+            checkScreenSize();
+        });
+    });
+
+    function checkScreenSize() {
+        const mapContainer = document.querySelector('.map-container');
+        const controls = document.querySelector('.controls');
+        const stats = document.querySelector('.stats');
+        const fallback = document.querySelector('.map-fallback');
+        const svg = document.getElementById('russiaMap');
+        const desktopCards = document.getElementById('regionList');
+        const mobileCards = document.getElementById('mobileRegionCards');
+        
+        if (window.innerWidth <= 900) {
+            // Скрываем карту и показываем запасной контент
+            if (mapContainer) mapContainer.style.display = 'none';
+            if (controls) controls.style.display = 'none';
+            if (stats) stats.style.display = 'none';
+            if (fallback) fallback.style.display = 'block';
+            if (svg) svg.style.display = 'none';
+            if (desktopCards) desktopCards.style.display = 'none';
+            if (mobileCards) mobileCards.style.display = 'grid';
+        } else {
+            // Показываем карту и скрываем запасной контент
+            if (mapContainer) mapContainer.style.display = 'block';
+            if (controls) controls.style.display = 'flex';
+            if (stats) stats.style.display = 'grid';
+            if (fallback) fallback.style.display = 'none';
+            if (desktopCards) desktopCards.style.display = 'grid';
+            if (mobileCards) mobileCards.style.display = 'none';
+            
+            // Если карта еще не создана, создаем её
+            if (svg && svg.style.display === 'none' && currentPoints.length === 0) {
+                createCleanMap();
+            }
+        }
+    }
+
+    function createMobileRegionCards() {
+        const container = document.getElementById('mobileRegionCards');
+        if (!container) return;
+        
+        container.innerHTML = '';
+        
+        Object.keys(regionsData).forEach(regionName => {
+            const regionData = regionsData[regionName];
+            const card = document.createElement('div');
+            card.className = 'region-card';
+            card.innerHTML = `
+                <div class="region-marker" style="background: ${districtColors[regionData.district]}"></div>
+                <div class="region-info">
+                    <div class="region-name">${regionName}</div>
+                    <div class="region-details">${regionData.capital} • ${regionData.population}</div>
+                    <div class="region-details" style="color: #999; font-size: 0.8em;">${regionData.district} ФО</div>
+                </div>
+            `;
+            
+            card.addEventListener('click', function() {
+                if (regionData.hreff) {
+                    window.location.href = regionData.hreff;
+                }
+            });
+            
+            container.appendChild(card);
+        });
+    }
+
+    function createDesktopRegionCards() {
+        const container = document.getElementById('regionList');
+        if (!container) return;
+        
+        container.innerHTML = '';
+        
+        Object.keys(regionsData).forEach(regionName => {
+            const regionData = regionsData[regionName];
+            const card = document.createElement('div');
+            card.className = 'region-card';
+            card.innerHTML = `
+                <div class="region-marker" style="background: ${districtColors[regionData.district]}"></div>
+                <div class="region-info">
+                    <div class="region-name">${regionName}</div>
+                    <div class="region-details">${regionData.capital} • ${regionData.population}</div>
+                    <div class="region-details" style="color: #999; font-size: 0.8em;">${regionData.district} ФО</div>
+                </div>
+            `;
+            
+            card.addEventListener('click', function() {
+                const regionData = regionsData[regionName];
+                if (regionData.hreff) {
+                    window.location.href = regionData.hreff;
+                } else {
+                    highlightRegionByName(regionName);
+                }
+            });
+            
+            container.appendChild(card);
+        });
+    }
+
+    function createCleanMap() {
+        const svg = document.getElementById('russiaMap');
+        if (!svg) return;
+        
+        const loading = document.getElementById('loading');
+        const container = document.querySelector('.map-container');
+        if (!container) return;
+        
+        const width = container.clientWidth;
+        const height = container.clientHeight;
+        
+        svg.setAttribute('width', width);
+        svg.setAttribute('height', height);
+        svg.setAttribute('viewBox', `0 0 1000 600`);
+        
+        // Создаем полностью прозрачный фон
+        const background = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+        background.setAttribute('width', '100%');
+        background.setAttribute('height', '100%');
+        background.setAttribute('fill', 'transparent');
+        svg.appendChild(background);
+        
+        // Создаем точки для каждого региона
+        Object.keys(regionsData).forEach(regionName => {
+            const regionData = regionsData[regionName];
+            const point = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+            
+            point.setAttribute('class', 'region-point');
+            point.setAttribute('cx', regionData.coordinates.x);
+            point.setAttribute('cy', regionData.coordinates.y);
+            point.setAttribute('r', '8');
+            point.setAttribute('data-name', regionName);
+            
+            // Добавляем подпись
+            const label = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+            label.setAttribute('x', regionData.coordinates.x);
+            label.setAttribute('y', regionData.coordinates.y - 15);
+            label.setAttribute('class', 'region-label');
+            label.textContent = regionName;
+            
+            point.addEventListener('mouseover', function(event) {
+                handlePointHover(event, regionName, regionData);
+            });
+            
+            point.addEventListener('mouseout', function(event) {
+                handlePointLeave(event, regionName, regionData);
+            });
+            
+            point.addEventListener('click', function(event) {
+                handlePointClick(regionName, regionData);
+            });
+            
+            svg.appendChild(point);
+            svg.appendChild(label);
+            currentPoints.push(point);
+        });
+        
+        // Скрываем загрузку и показываем карту
+        if (loading) loading.style.display = 'none';
+        svg.style.display = 'block';
+    }
+
+    function handlePointHover(event, regionName, regionData) {
+        const point = event.target;
+        point.setAttribute('r', '12');
+        point.style.fill = '#ff0000';
+        
+        updateInfoPanel(regionName, regionData);
+        document.getElementById('infoPanel').style.display = 'block';
+    }
+
+    function handlePointLeave(event, regionName, regionData) {
+        const point = event.target;
+        point.setAttribute('r', '8');
+        point.style.fill = '#ff4444';
+        point.classList.remove('highlighted');
+        
+        document.getElementById('infoPanel').style.display = 'none';
+    }
+
+    function handlePointClick(regionName, regionData) {
+        if (regionData.hreff) {
+            window.location.href = regionData.hreff;
+        } else {
+            showRegionDetails(regionName, regionData);
+        }
+    }
+
+    function highlightRegionByName(regionName) {
+        const point = currentPoints.find(p => p.getAttribute('data-name') === regionName);
+        if (point) {
+            const regionData = regionsData[regionName];
+            
+            point.classList.add('highlighted');
+            point.setAttribute('r', '14');
+            
+            updateInfoPanel(regionName, regionData);
+            document.getElementById('infoPanel').style.display = 'block';
+            
+            setTimeout(() => {
+                point.classList.remove('highlighted');
+                point.setAttribute('r', '8');
+            }, 5000);
+        }
+    }
+
+    function updateInfoPanel(name, data) {
+        document.getElementById('regionName').textContent = name;
+        document.getElementById('regionCapital').textContent = data.capital;
+        document.getElementById('regionPopulation').textContent = data.population;
+        document.getElementById('regionArea').textContent = data.area + ' км²';
+        document.getElementById('regionDistrict').textContent = data.district;
+        document.getElementById('regionDescription').textContent = data.description;
+        
+        const badge = document.getElementById('districtBadge');
+        badge.textContent = data.district;
+        badge.style.background = districtColors[data.district];
+    }
+
+    function showRegionDetails(name, data) {
+        const details = `
+📍 ${name}
+
+🏛️ Столица: ${data.capital}
+👥 Население: ${data.population}
+📏 Площадь: ${data.area} км²
+🗺️ Федеральный округ: ${data.district}
+
+📝 ${data.description}
+        `.trim();
+        
+        alert(details);
+    }
+
+    function filterByDistrict(district) {
+        document.querySelectorAll('.filter-btn').forEach(btn => {
+            btn.classList.remove('active');
+        });
+        event.target.classList.add('active');
+        
+        currentPoints.forEach(point => {
+            const regionName = point.getAttribute('data-name');
+            const regionData = regionsData[regionName];
+            
+            if (district === 'all' || (regionData && regionData.district === district)) {
+                point.style.display = 'block';
+                point.style.opacity = '1';
+                if (point.nextSibling) {
+                    point.nextSibling.style.display = 'block';
+                }
+            } else {
+                point.style.opacity = '0.3';
+                if (point.nextSibling) {
+                    point.nextSibling.style.display = 'none';
+                }
+            }
+        });
+    }
+
+    window.addEventListener('resize', function() {
+        const svg = document.getElementById('russiaMap');
+        if (svg && svg.style.display !== 'none') {
+            const container = document.querySelector('.map-container');
+            if (container) {
+                svg.setAttribute('width', container.clientWidth);
+                svg.setAttribute('height', container.clientHeight);
+            }
+        }
+    });
+</script>
+        
+    <section class="about" id="about">
+        <div class="container">
+            <div class="about-content">
+                <div class="about-text">
+                    <h2>Зачем мы это делаем?</h2>
+                    <p>Мы — цифровой мост между вековыми традициями и современным миром. </p>
+                    <p>Мы используем передовые технологии, чтобы сохранить, актуализировать и сделать доступным уникальное наследие народов России для каждого.</p>
+                </div>
+                <div class="about-image">
+                    <video width="611" height="390" controls autoplay muted class="video-css">
+                        <source src="Video/lesson.mp4" type="video/mp4">
+                    </video>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <section class="features" id="features">
+        <div class="container-features">
+            <div class="section-title">
+                <h2>Наши преимущества</h2>
+                <p>О чем наш сайт? </p>
+            </div>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">👨‍👩‍👧‍👦</div>
+                    <h3>Народы</h3>
+                    <p>Мы покажем вам, какие малочисленные народы нашей страны проживают на территории России</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">💡</div>
+                    <h3>Идеи</h3>
+                    <p>Мало кто задумывается что у нас в стране живут вымерающие народы</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">⭐</div>
+                    <h3>История</h3>
+                    <p>Мы хотим что бы эти народы все помнили и знали, о их существовании</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <p>© 2025 Карта народов России. Информация носит ознакомительный характер.</p>
+    </footer>
+
+    <script>
+        class AutoSlider {
+            constructor(container) {
+                this.container = container;
+                this.slider = container.querySelector('.slider');
+                this.slides = container.querySelectorAll('.slide');
+                this.dots = container.querySelectorAll('.slider-dot');
+                this.prevBtn = container.querySelector('.slider-arrow.prev');
+                this.nextBtn = container.querySelector('.slider-arrow.next');
+                this.autoPlayIndicator = container.querySelector('.auto-play-indicator');
+                
+                this.currentSlide = 0;
+                this.slideCount = this.slides.length;
+                this.autoPlayInterval = null;
+                this.autoPlayDelay = 4000;
+                this.isAutoPlaying = true;
+                
+                this.init();
+            }
+            
+            init() {
+                this.prevBtn.addEventListener('click', () => {
+                    this.stopAutoPlay();
+                    this.prev();
+                    this.restartAutoPlay();
+                });
+                
+                this.nextBtn.addEventListener('click', () => {
+                    this.stopAutoPlay();
+                    this.next();
+                    this.restartAutoPlay();
+                });
+                
+                this.dots.forEach((dot, index) => {
+                    dot.addEventListener('click', () => {
+                        this.stopAutoPlay();
+                        this.goToSlide(index);
+                        this.restartAutoPlay();
+                    });
+                });
+                
+                this.startAutoPlay();
+                
+                this.container.addEventListener('mouseenter', () => {
+                    this.stopAutoPlay();
+                    this.autoPlayIndicator.style.opacity = '0.6';
+                });
+                
+                this.container.addEventListener('mouseleave', () => {
+                    this.startAutoPlay();
+                    this.autoPlayIndicator.style.opacity = '1';
+                });
+                
+                this.addSwipeSupport();
+            }
+            
+            goToSlide(index) {
+                this.currentSlide = index;
+                this.updateSlider();
+            }
+            
+            next() {
+                this.currentSlide = (this.currentSlide + 1) % this.slideCount;
+                this.updateSlider();
+            }
+            
+            prev() {
+                this.currentSlide = (this.currentSlide - 1 + this.slideCount) % this.slideCount;
+                this.updateSlider();
+            }
+            
+            updateSlider() {
+                const translateX = -this.currentSlide * 100;
+                this.slider.style.transform = `translateX(${translateX}%)`;
+                
+                this.dots.forEach((dot, index) => {
+                    dot.classList.toggle('active', index === this.currentSlide);
+                });
+            }
+            
+            startAutoPlay() {
+                this.stopAutoPlay();
+                this.isAutoPlaying = true;
+                this.autoPlayInterval = setInterval(() => {
+                    this.next();
+                }, this.autoPlayDelay);
+                
+                this.autoPlayIndicator.style.display = 'flex';
+            }
+            
+            stopAutoPlay() {
+                if (this.autoPlayInterval) {
+                    clearInterval(this.autoPlayInterval);
+                    this.autoPlayInterval = null;
+                }
+                this.isAutoPlaying = false;
+            }
+            
+            restartAutoPlay() {
+                setTimeout(() => {
+                    if (!this.isAutoPlaying) {
+                        this.startAutoPlay();
+                    }
+                }, 5000);
+            }
+            
+            addSwipeSupport() {
+                let startX = 0;
+                let endX = 0;
+                
+                this.container.addEventListener('touchstart', (e) => {
+                    startX = e.touches[0].clientX;
+                    this.stopAutoPlay();
+                });
+                
+                this.container.addEventListener('touchend', (e) => {
+                    endX = e.changedTouches[0].clientX;
+                    this.handleSwipe(startX, endX);
+                    this.restartAutoPlay();
+                });
+            }
+            
+            handleSwipe(startX, endX) {
+                const diff = startX - endX;
+                const swipeThreshold = 50;
+                
+                if (Math.abs(diff) > swipeThreshold) {
+                    if (diff > 0) {
+                        this.next();
+                    } else {
+                        this.prev();
+                    }
+                }
+            }
+        }
+        
+        document.addEventListener('DOMContentLoaded', () => {
+            const sliderContainer = document.querySelector('.slider-container');
+            if (sliderContainer) {
+                new AutoSlider(sliderContainer);
+            }
+        });
+
+        document.addEventListener('visibilitychange', function() {
+            if (!document.hidden) {
+                const sliderContainer = document.querySelector('.slider-container');
+                if (sliderContainer && sliderContainer._sliderInstance) {
+                    sliderContainer._sliderInstance.startAutoPlay();
+                }
+            }
+        });
+    </script>
+</body>
+</html>
